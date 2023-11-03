@@ -112,7 +112,7 @@ void levelOrderTraversal(Node* root)
         //cout<< "ReCheck Q if empty" << endl;
         //cout << "Is Q empty" << q.empty() << endl;
     }
-    cout << "Level Order Traverse Done" << endl;
+    cout << "\n Level Order Traverse Done" << endl;
     return;
 }
 
@@ -132,6 +132,121 @@ void inOrderTraversal(Node *root)
     Node* right_Ptr = root->right;
     inOrderTraversal(right_Ptr);
 }
+
+void deleteRightMostNode(Node* root, Node* NodeToDelete)
+{
+    queue<Node*>q;
+    q.push(root);
+
+    Node* temp=NULL;
+
+    while(!q.empty())
+    {
+        temp=q.front();
+        q.pop();
+
+        if(temp==NodeToDelete)
+        {
+            temp=NULL;
+            delete(temp);
+            return;
+        }
+        if(temp->left!=NULL)
+        {
+            if(temp->left == NodeToDelete)
+            {
+                temp->left=NULL;
+                delete temp->left;
+                return;
+            }
+            else
+            {
+                q.push(temp->left);
+            }
+        }
+        if(temp->right!=NULL)
+        {
+            if(temp->right == NodeToDelete)
+            {
+                temp->right = NULL;
+                levelOrderTraversal(root);
+                delete(temp->right);
+                return;
+            }
+            else
+            {
+                q.push(temp->right);
+            }
+        }
+    }
+}
+
+void deleteNode(Node *root,int eleToDel)
+{
+    if(root == NULL)
+    {
+        return;
+    }
+
+    if(root->left == NULL && root->right == NULL)
+    {
+        if(root->data != eleToDel)
+        {
+            return;
+        }
+    }
+
+    queue<Node*>q;
+    q.push(root);
+    Node* keyNode=NULL;
+    Node* temp=NULL;
+    Node* last=NULL;
+
+    while(!q.empty())
+    {
+       temp=q.front();
+       q.pop();
+
+       if(temp->data == eleToDel)
+       {
+           keyNode = temp;
+       }
+       if(temp->left!=NULL)
+       {
+           last = temp;
+           q.push(temp->left);
+       }
+
+       if(temp->right!=NULL)
+       {
+           last = temp;
+           q.push(temp->right);
+       }
+    }
+
+    if( keyNode != NULL )
+    {
+        cout << "KeyNode->data:" << keyNode->data << endl;
+        cout << "temp->data:" << temp->data << endl;
+        int dataToReplace = temp->data;
+        keyNode->data = dataToReplace;
+        //deleteRightMostNode(root,temp); // temp is the rightMost Node;
+        if(last->right == temp)
+        {
+            last->right = NULL;
+        }
+        else
+        {
+            last->right = NULL;
+        }
+        delete(temp);
+        cout << "KeyNode:" << keyNode << endl;
+
+    }
+
+}
+
+
 
 int main()
 {
@@ -156,8 +271,19 @@ int main()
     inOrderTraversal(root);
     cout << "\n\n";
 
+    int n=50;
+    deleteNode(root,n);
+    cout << "Level Order Traversal Data After Deleting" << n << endl;
+    levelOrderTraversal(root);
+    cout << "\n\n";
 
+    /*
+    n=10;
+    deleteNode(root,n);
+    cout << "Level Order Traversal Data After Deleting " << n << endl;
+    levelOrderTraversal(root);
+    cout << "\n\n";
 
-
+    */
     return 0;
 }
