@@ -28,14 +28,12 @@ void inOrder( Node* root )
     inOrder(root->right);
 }
 
-void insertIntoBST(Node* root, int data)
+Node* insertIntoBST(Node* root, int data)
 {
     if(root == NULL)
     {
-        Node* newNode = new Node(data);
-        root = newNode;
-        cout << "New Node inserted: data:" << root->data << " root:" << root << endl;
-        return;
+        cout << "New Node inserted: data:" << data << endl;
+        return new Node(data);
     }
     else
     {
@@ -67,23 +65,56 @@ void insertIntoBST(Node* root, int data)
                 cout << "\nNew Node date:" << data << " Inserted to left of " << prevTemp->data << endl;;
             }
         }
-        return;
+        return root;
     }
 }
 
+Node* insertViaRecursion(Node* root, int val)
+{
+    if(!root)
+    {
+        return new Node(val);
+    }
+
+    if(root->data < val)
+    {
+        root->right = insertViaRecursion(root->right,val);
+    }
+    else if(root->data > val)
+    {
+        root->left = insertViaRecursion(root->left,val);
+    }
+    return root;
+}
 int main()
 {
-    //Node* root = NULL;
-    //insertIntoBST(root,10);
-    Node * root = new Node(10);
-
-    insertIntoBST(root,25);
-    insertIntoBST(root,15);
-    insertIntoBST(root,5);
+    //Iterative Approach
+    Node* root = NULL;
+    root = insertIntoBST(root,10);
+    root = insertIntoBST(root,25);
+    root = insertIntoBST(root,15);
+    root = insertIntoBST(root,5);
 
     cout << "\nInOrder Traversal" << endl;
     inOrder(root);
     cout << endl << endl;
+
+
+
+
+    // Iterative Approach
+    Node* head=NULL;
+    head = insertViaRecursion(head,100);
+    head = insertViaRecursion(head,200);
+    head = insertViaRecursion(head,300);
+    head = insertViaRecursion(head,50);
+    head = insertViaRecursion(head,75);
+
+
+     cout << "\nInOrder Traversal" << endl;
+    inOrder(head);
+    cout << endl << endl;
+
 
     return 0;
 }
