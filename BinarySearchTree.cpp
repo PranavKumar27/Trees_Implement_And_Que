@@ -108,6 +108,7 @@ Node* deleteNode(Node* root, int val)
             if(temp->left != NULL && temp->right == NULL)
             {
                 temp->data=temp->left->data;
+                cout << "2 New temp data:" << temp->data << endl;
                 delete(temp->left);
                 temp->left = NULL;
                 return root;
@@ -162,6 +163,79 @@ Node* deleteNode(Node* root, int val)
 
 }
 
+Node* findMin(Node* root)
+{
+    if(root == NULL)
+    {
+       return NULL;
+    }
+
+    Node* minNode=root;
+    Node* temp=root;
+
+    while(temp!=NULL)
+    {
+        if(temp->data < minNode->data)
+        {
+            minNode = temp;
+        }
+        temp=temp->left;
+    }
+    return minNode;
+}
+
+Node* deleteViaRecursion(Node* root, int val)
+{
+    if(root==NULL)
+    {
+        return NULL;
+    }
+    else
+    {
+        if(root->data < val)
+        {
+            root->right=deleteViaRecursion(root->right,val);
+            return root;
+        }
+        else if(root->data > val)
+        {
+            root->left=deleteViaRecursion(root->left,val);
+            return root;
+        }
+        else if(root->data == val)
+        {
+            if(root->left == NULL && root->right == NULL)
+            {
+                delete(root);
+                return NULL;
+            }
+            else if(root->left != NULL && root->right == NULL)
+            {
+                Node* temp= root->left;
+                delete(root);
+                return temp;
+            }
+            else if(root->right != NULL && root->left == NULL)
+            {
+                Node* temp= root->left;
+                delete(root);
+                return temp;
+            }
+            else
+            {
+                cout << "Call findMin" << endl;
+                Node* minTemp = findMin(root->right);
+                cout << "minTemp data:" << minTemp->data << endl;
+                root->data = minTemp->data;
+                root->right=deleteViaRecursion(root->right,minTemp->data);
+                return root;
+            }
+        }
+    }
+}
+
+
+
 Node* insertViaRecursion(Node* root, int val)
 {
     if(!root)
@@ -184,21 +258,24 @@ int main()
     //Iterative Approach
     Node* root = NULL;
     root = insertIntoBST(root,10);
-    root = insertIntoBST(root,25);
-    root = insertIntoBST(root,15);
-    root = insertIntoBST(root,5);
-    root = insertIntoBST(root,11);
-    root = insertIntoBST(root,19);
-    root = insertIntoBST(root,17);
-    root = insertIntoBST(root,18);
     root = insertIntoBST(root,20);
+    root = insertIntoBST(root,5);
+    root = insertIntoBST(root,15);
+    root = insertIntoBST(root,30);
+    root = insertIntoBST(root,25);
+    root = insertIntoBST(root,40);
+    root = insertIntoBST(root,24);
+    root = insertIntoBST(root,27);
+    root = insertIntoBST(root,32);
+    root = insertIntoBST(root,50);
 
     cout << "\nInOrder Traversal" << endl;
     inOrder(root);
     cout << endl << endl;
 
 
-    root=deleteNode(root,15);
+    //root=deleteNode(root,15);
+    root=deleteViaRecursion(root,30);
 
     cout << "\nInOrder Traversal" << endl;
     inOrder(root);
