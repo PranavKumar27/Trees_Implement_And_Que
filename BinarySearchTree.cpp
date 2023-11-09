@@ -1,4 +1,5 @@
 #include <iostream>
+#include <queue>
 
 using namespace std;
 
@@ -291,6 +292,40 @@ int height(Node* root)
     }
 }
 
+int depthUsingLevelOrderTraversal(Node* root)
+{
+    if(root == NULL)
+    {
+        return 0;
+    }
+
+    queue<Node*>q;
+    q.push(root);
+    int depth = -1;
+    Node* temp;
+    while(!q.empty())
+    {
+       temp=q.front();
+       q.pop();
+
+        cout << "\n temp->data:" << temp->data << endl;
+       if(q.empty())
+       {
+           depth++;
+           cout << "\ndepth =" << depth << endl;
+       }
+
+       if(temp->left != NULL)
+       {
+           q.push(temp->left);
+       }
+       if(temp->right != NULL)
+       {
+           q.push(temp->right);
+       }
+    }
+    return depth;
+}
 
 int main()
 {
@@ -310,6 +345,7 @@ int main()
 
     cout << "Height of Binary Search Tree Using Technique 1:" << height(root) << endl;
     cout << "Height of Binary Search Tree Using Technique 2:" << findheightOfTree(root) << endl;
+    cout << "Height of Binary Search Tree Using Technique 3 Level Order Traversal:" << depthUsingLevelOrderTraversal(root) << endl;
     //root=deleteNode(root,15);
     //root=deleteViaRecursion(root,30);
 
