@@ -253,29 +253,65 @@ Node* insertViaRecursion(Node* root, int val)
     }
     return root;
 }
+
+unsigned findMax(unsigned a,unsigned b)
+{
+    return(a>b)?a:b;
+}
+
+unsigned findheightOfTree(Node* root)
+{
+    if(root==NULL)
+    {
+        return 0;
+    }
+    if(root->left == NULL && root->right == NULL)
+    {
+        return 0;
+    }
+    return findMax(findheightOfTree(root->left),findheightOfTree(root->right)) + 1;
+}
+
+int height(Node* root)
+{
+    if(root == NULL)
+    {
+        return -1;
+    }
+    int ldepth = height(root->left);
+    int rdepth = height(root->right);
+
+    if(ldepth > rdepth)
+    {
+        return ldepth+1;
+    }
+    else
+    {
+        return rdepth+1;
+    }
+}
+
+
 int main()
 {
     //Iterative Approach
     Node* root = NULL;
-    root = insertIntoBST(root,10);
-    root = insertIntoBST(root,20);
+    root = insertIntoBST(root,3);
+    root = insertIntoBST(root,1);
+    root = insertIntoBST(root,7);
     root = insertIntoBST(root,5);
-    root = insertIntoBST(root,15);
-    root = insertIntoBST(root,30);
-    root = insertIntoBST(root,25);
-    root = insertIntoBST(root,40);
-    root = insertIntoBST(root,24);
-    root = insertIntoBST(root,27);
-    root = insertIntoBST(root,32);
-    root = insertIntoBST(root,50);
+    root = insertIntoBST(root,4);
+
+
 
     cout << "\nInOrder Traversal" << endl;
     inOrder(root);
     cout << endl << endl;
 
-
+    cout << "Height of Binary Search Tree Using Technique 1:" << height(root) << endl;
+    cout << "Height of Binary Search Tree Using Technique 2:" << findheightOfTree(root) << endl;
     //root=deleteNode(root,15);
-    root=deleteViaRecursion(root,30);
+    //root=deleteViaRecursion(root,30);
 
     cout << "\nInOrder Traversal" << endl;
     inOrder(root);
