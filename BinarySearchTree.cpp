@@ -368,6 +368,51 @@ int depthUsingLevelOrderTraversalAnotherTechnique(Node* root)
     return height;
 }
 
+void convertIntoMirrorImage(Node* root)
+{
+    if(root==NULL)
+    {
+        return;
+    }
+
+    convertIntoMirrorImage(root->left);
+    convertIntoMirrorImage(root->right);
+
+    Node* temp = root->left;
+    root->left = root->right;
+    root->right = temp;
+}
+
+Node* convertIntoMirrorImageUsingLevelOrder(Node* root)
+{
+    if(root == NULL)
+    {
+        return NULL;
+    }
+    queue<Node*> q;
+    q.push(root);
+    Node* tmpPtr;
+
+    while(!q.empty())
+    {
+        Node* temp = q.front();
+        q.pop();
+
+        tmpPtr = temp->left;
+        temp->left = temp->right;
+        temp->right = tmpPtr;
+
+        if(temp->left)
+        {
+            q.push(temp->left);
+        }
+        if(temp->right)
+        {
+            q.push(temp->right);
+        }
+    }
+    return root;
+}
 string findInOrder(Node* root,string& str)
 {
     if(root == NULL)
@@ -577,9 +622,9 @@ int main()
     //Iterative Approach
     Node* root = NULL;
     root = insertIntoBST(root,2);
+    root = insertIntoBST(root,5);
+    root = insertIntoBST(root,8);
     root = insertIntoBST(root,1);
-    root = insertIntoBST(root,3);
-
 
     Node* root1 = NULL;
     root1 = insertIntoBST(root1,1);
@@ -634,7 +679,21 @@ int main()
     //root=deleteNode(root,15);
     //root=deleteViaRecursion(root,30);
 
-    cout << "\nInOrder Traversal" << endl;
+    cout << "\nBefore Mirror Image InOrder Traversal" << endl;
+    inOrder(root);
+    cout << endl << endl;
+
+
+    cout << "\n Convert into Mirror Image" << endl;
+    convertIntoMirrorImage(root);
+
+    cout << "\nAfter Mirror Image InOrder Traversal" << endl;
+    inOrder(root);
+    cout << endl << endl;
+
+    root=convertIntoMirrorImageUsingLevelOrder(root);
+
+    cout << "\nAgain After Mirror Image InOrder Traversal" << endl;
     inOrder(root);
     cout << endl << endl;
 
