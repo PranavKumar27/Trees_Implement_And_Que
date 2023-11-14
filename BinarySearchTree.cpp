@@ -1,5 +1,6 @@
 #include <iostream>
 #include <queue>
+#include <stack>
 #include <cstring>
 
 using namespace std;
@@ -413,6 +414,118 @@ Node* convertIntoMirrorImageUsingLevelOrder(Node* root)
     }
     return root;
 }
+
+bool checkIfTreeIsMirror(Node* root1,Node* root2)
+{
+    if(root1 == NULL && root2 == NULL)
+    {
+        return true;
+    }
+
+    if(root1 && root2 && root1->data ==  root2->data)
+    {
+        return checkIfTreeIsMirror(root1->left,root2->right) && checkIfTreeIsMirror(root1->right,root2->left);
+    }
+
+    return false;
+}
+
+
+bool checkIfTreeIsSymetric(Node* root)
+{
+    if(root!=NULL)
+    {
+        return checkIfTreeIsMirror(root,root);
+    }
+    else
+    {
+        return false;
+    }
+}
+
+
+bool checkIfTreeHasSymetricUsingStack(Node* root)
+{
+
+    if(root == NULL)
+    {
+        return true;
+    }
+
+    stack<Node*>s1;
+    stack<Node*>s2;
+    s1.push(root);
+    s2.push(root);
+    Node* temp1=NULL;
+    Node* temp2=NULL;
+
+    while(!s1.empty() && !s2.empty())
+    {
+        temp1 = s1.top();
+        s1.pop();
+        temp2 = s2.top();
+        s2.pop();
+
+        if(temp1==NULL && temp2==NULL)
+        {
+            continue;
+        }
+        if(temp1==NULL || temp2==NULL)
+        {
+            return false;
+        }
+        if(temp1->data != temp2->data)
+        {
+            return false;
+        }
+        s1.push(temp1->left);
+        s2.push(temp2->right);
+        s1.push(temp1->right);
+        s2.push(temp2->left);
+    }
+    return true;
+
+}
+
+bool checkIfTreeHasSymetricUsingQueue(Node* root)
+{
+    if(root == NULL)
+    {
+        return false;
+    }
+
+    queue<Node*>q;
+    q.push(root);
+    q.push(root);
+
+    while(!q.empty())
+    {
+        Node* temp1=q.front();
+        q.pop();
+        Node* temp2=q.front();
+        q.pop();
+
+        if(temp1 == NULL && temp2 == NULL)
+        {
+            continue;
+        }
+        if(temp1 == NULL || temp2 == NULL)
+        {
+            return false;
+        }
+        if(temp1->data != temp2->data)
+        {
+            return false;
+        }
+
+        q.push(temp1->left);
+        q.push(temp2->right);
+        q.push(temp1->right);
+        q.push(temp2->left);
+    }
+    return true;
+}
+
 string findInOrder(Node* root,string& str)
 {
     if(root == NULL)
@@ -621,10 +734,16 @@ int main()
 {
     //Iterative Approach
     Node* root = NULL;
-    root = insertIntoBST(root,2);
+    /*root = insertIntoBST(root,7);
     root = insertIntoBST(root,5);
-    root = insertIntoBST(root,8);
-    root = insertIntoBST(root,1);
+    root = insertIntoBST(root,5);*/
+    //root = insertIntoBST(root,1);
+
+    root = new Node(7);
+    root->left = new Node(5);
+    root->right = new Node(5);
+    root->left->right = new Node(12);
+    root->right->right = new Node(12);
 
     Node* root1 = NULL;
     root1 = insertIntoBST(root1,1);
@@ -696,6 +815,14 @@ int main()
     cout << "\nAgain After Mirror Image InOrder Traversal" << endl;
     inOrder(root);
     cout << endl << endl;
+
+    cout << "\n Check if Tree is symetric:" << checkIfTreeIsSymetric(root) << endl;
+
+    cout << "\n Check if Tree is symetric Using Stacks:" << checkIfTreeHasSymetricUsingStack(root) << endl;
+
+    cout << "\n Check if Tree is symetric Using Queue:" << checkIfTreeHasSymetricUsingQueue(root) << endl;
+
+
 
     /*
     // Iterative Approach
