@@ -275,6 +275,20 @@ unsigned findheightOfTree(Node* root)
     return findMax(findheightOfTree(root->left),findheightOfTree(root->right)) + 1;
 }
 
+int diameterOfABinaryTree(Node*root,int& ans)
+{
+    if(root==NULL)
+    {
+        return 0;
+    }
+
+    int lh = diameterOfABinaryTree(root->left,ans);
+    int rh = diameterOfABinaryTree(root->right,ans);
+
+    ans = max(ans,1+lh+rh);
+
+    return 1+max(lh,rh);
+}
 int height(Node* root)
 {
     if(root == NULL)
@@ -741,9 +755,12 @@ int main()
 
     root = new Node(7);
     root->left = new Node(5);
-    root->right = new Node(5);
-    root->left->right = new Node(12);
-    root->right->right = new Node(12);
+    root->left->left = new Node(12);
+    root->left->right = new Node(15);
+    root->left->left->left = new Node(9);
+    root->left->right->right = new Node(29);
+    root->left->left->left->right = new Node(25);
+    root->left->right->right->left = new Node(16);
 
     Node* root1 = NULL;
     root1 = insertIntoBST(root1,1);
@@ -821,6 +838,10 @@ int main()
     cout << "\n Check if Tree is symetric Using Stacks:" << checkIfTreeHasSymetricUsingStack(root) << endl;
 
     cout << "\n Check if Tree is symetric Using Queue:" << checkIfTreeHasSymetricUsingQueue(root) << endl;
+
+    int diameter=0;
+    diameterOfABinaryTree(root,diameter);
+    cout << "\n Diameter of a Tree :" << diameter  << endl;
 
 
 
