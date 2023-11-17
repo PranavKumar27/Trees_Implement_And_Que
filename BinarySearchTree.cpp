@@ -350,6 +350,109 @@ int depthUsingLevelOrderTraversal(Node* root)
     return depth;
 }
 
+int height_Of_SubTree(Node* root)
+{
+    if(root==NULL)
+    {
+        return 0;
+    }
+
+    int lh=height_Of_SubTree(root->left);
+    int rh=height_Of_SubTree(root->right);
+
+    return 1+max(lh,rh);
+}
+
+bool CheckForTreeAsHeightBalanced(Node* root)
+{
+    if(root == NULL)
+    {
+        return true;
+    }
+
+    int lh = height_Of_SubTree(root->left);
+    int rh = height_Of_SubTree(root->right);
+
+    //cout << "lh=" << lh << "  rh=" << rh << endl;
+    if(abs(lh-rh)>=1 && CheckForTreeAsHeightBalanced(root->left) && CheckForTreeAsHeightBalanced(root->right))
+    {
+        return true;
+    }
+    return false;
+
+}
+
+void InOrderQueue(Node* root,queue<Node*>&q)
+{
+    if(root == NULL)
+    {
+        return;
+    }
+    InOrderQueue(root->left,q);
+    q.push(root);
+    cout << "data=\t" << root->data << endl;
+    InOrderQueue(root->right,q);
+
+
+}
+void printCDLL(Node* head)
+{
+    Node* temp=head;
+    while(temp->right!=head)
+    {
+        cout << temp->data << endl;
+        temp = temp->right;
+    }
+    cout << temp->data << endl;
+}
+Node* ConvertBSTAsCDLL(Node* root)
+{
+    queue<Node*>q;
+
+    InOrderQueue(root,q);
+
+    Node*head = NULL;
+    Node* temp;
+    Node* tempHead = head;
+    Node* newNodeZZ = NULL;
+    Node* prevtempHead = NULL;
+
+    cout << "Queue sz= " << q.size() << endl;
+    while(!q.empty())
+    {
+        temp = q.front();
+        cout << "temp data =" << temp->data << endl;
+        q.pop();
+
+        tempHead = head;
+        newNodeZZ = new Node(temp->data);
+
+        prevtempHead = NULL;
+        while(tempHead != NULL)
+        {
+            prevtempHead = tempHead;
+            tempHead = tempHead->right;
+        }
+        if(prevtempHead!=NULL)
+            prevtempHead->right = newNodeZZ;
+        if(head == NULL)
+        {
+            head = newNodeZZ;
+            cout << "Head data =" << head->data << endl;
+        }
+    }
+
+    cout << "NewNode ==" << newNodeZZ->data << endl;
+    if(newNodeZZ!=NULL)
+        newNodeZZ->right = head;
+    printCDLL(head);
+    return head;
+
+
+}
+
+
+
 int depthUsingLevelOrderTraversalAnotherTechnique(Node* root)
 {
     if(root == NULL)
@@ -763,17 +866,23 @@ int main()
     root->left->right->right->left = new Node(16);
 
     Node* root1 = NULL;
-    root1 = insertIntoBST(root1,1);
-    root1 = insertIntoBST(root1,2);
     root1 = insertIntoBST(root1,3);
-
+    root1 = insertIntoBST(root1,5);
+    root1 = insertIntoBST(root1,8);
+    /*root1 = insertIntoBST(root1,9);
+    root1 = insertIntoBST(root1,4);
+    root1 = insertIntoBST(root1,3);
+    root1 = insertIntoBST(root1,5);
+    root1 = insertIntoBST(root1,2);
+*/
+    cout << "Check If Tree is height Balanced :" << CheckForTreeAsHeightBalanced(root1) << endl;
 
 
     cout << "\nInOrder Traversal of Tree 1" << endl;
     inOrder(root);
     cout << endl << endl;
 
-
+/*
     cout << "\nInOrder Traversal of Tree 2" << endl;
     inOrder(root1);
     cout << endl << endl;
@@ -842,8 +951,10 @@ int main()
     int diameter=0;
     diameterOfABinaryTree(root,diameter);
     cout << "\n Diameter of a Tree :" << diameter  << endl;
-
-
+*/
+    Node*head = ConvertBSTAsCDLL(root);
+    cout << "Convert BST to CDLL:" << endl;
+    printCDLL(head);
 
     /*
     // Iterative Approach
