@@ -31,6 +31,18 @@ void inOrder( Node* root )
     inOrder(root->right);
 }
 
+void postOrder( Node* root )
+{
+    if(root==NULL)
+    {
+        return;
+    }
+    postOrder(root->left);
+    postOrder(root->right);
+    cout << root->data << "\t";
+}
+
+
 Node* insertIntoBST(Node* root, int data)
 {
     if(root == NULL)
@@ -324,6 +336,8 @@ int depthUsingLevelOrderTraversal(Node* root)
     {
        temp=q.front();
        q.pop();
+       if(temp!=NULL)
+       cout << temp->data << "\t";
 
        if(temp==NULL)
        {
@@ -347,6 +361,7 @@ int depthUsingLevelOrderTraversal(Node* root)
            q.push(NULL);
        }
     }
+    cout << endl;
     return depth;
 }
 
@@ -407,6 +422,7 @@ void printCDLL(Node* head)
 }
 Node* ConvertBSTAsCDLL(Node* root)
 {
+    // CDLL : Circular Doubly Linked List
     queue<Node*>q;
 
     InOrderQueue(root,q);
@@ -448,10 +464,34 @@ Node* ConvertBSTAsCDLL(Node* root)
     printCDLL(head);
     return head;
 
-
 }
 
+int IsBinaryTreeBalancedBigOn(Node* root)
+{
+    if(root == NULL)
+    {
+        return 0;
+    }
+    int lh = IsBinaryTreeBalancedBigOn(root->left);
+    if(lh == -1)
+        return -1;
+    int rh = IsBinaryTreeBalancedBigOn(root->right);
+    if(rh == -1)
+        return -1;
+    if(abs(lh-rh) > 1)
+        return -1;
 
+    return 1+max(lh,rh);
+}
+
+bool checkIfTreeIsHeightBalnaced(Node* root)
+{
+    if(IsBinaryTreeBalancedBigOn(root)>=0)
+    {
+        return true;
+    }
+    return false;
+}
 
 int depthUsingLevelOrderTraversalAnotherTechnique(Node* root)
 {
@@ -847,6 +887,278 @@ bool compareUsingLevelOrderTraversal(Node* root1,Node* root2)
     Auxiliary Space: O(N), The auxiliary space complexity of the level order traversal approach is O(n), where n is the total number of nodes in both trees.
 
 */
+
+bool checkForChildSumProperty(Node* root)
+{
+    if(root == NULL)
+    {
+        return true;
+    }
+
+    Node* leftNode = root->left;
+    Node* rightNode = root->right;
+    int lval,rval;
+
+    if(leftNode ==NULL && rightNode == NULL)
+    {
+        return true;
+    }
+    if(leftNode==NULL)
+    {
+        lval = 0;
+    }
+    else
+    {
+        lval=leftNode->data;
+    }
+    if(rightNode==NULL)
+    {
+        rval = 0;
+    }
+    else
+    {
+        rval=rightNode->data;
+    }
+
+    cout << "\t rootdata=" << root->data <<"\t lval=" << lval << "\t rval=" << rval << endl;
+    if(lval+rval != root->data)
+    {
+        cout << "\tReturn Value is False" << endl;
+        return false;
+    }
+    return checkForChildSumProperty(root->left) && checkForChildSumProperty(root->right);
+}
+
+
+bool checkIfTreeIsBST(Node* root)
+{
+    if(root == NULL)
+    {
+        return true;
+    }
+
+    cout << "root=" << root->data << endl;
+    Node* lNode = root->left;
+    Node* rNode = root->right;
+
+    if(lNode!=NULL && rNode!=NULL)
+    cout << "Case 0 LNode=" << lNode->data << " rNode=" << rNode->data << " root:" << root->data << endl;
+
+
+
+    if(lNode!=NULL && rNode!=NULL)
+    {
+        if(lNode->data < root->data && root->data < rNode->data)
+        {
+            cout << "Case 1 LNode=" << lNode->data << " rNode=" << rNode->data << " root:" << root->data << endl;
+            return checkIfTreeIsBST(root->left) && checkIfTreeIsBST(root->right);
+        }
+        else
+        {
+            cout << "Condition Failed for BST" << endl;
+            return false;
+        }
+    }
+
+    if(lNode==NULL && rNode!=NULL)
+    {
+        if(root->data >rNode->data)
+        {
+            cout << "Case 2 rNode=" << rNode->data << " root:" << root->data << endl;
+            return checkIfTreeIsBST(root->right);
+        }
+        else
+            return false;
+    }
+
+    if(lNode!=NULL && rNode==NULL)
+    {
+        if(root->data >lNode->data)
+        {
+            cout << "Case 3 LNode=" << lNode->data << " root:" << root->data << endl;
+            return checkIfTreeIsBST(root->left);
+        }
+        else
+            return false;
+    }
+
+    if(lNode==NULL && rNode==NULL)
+    {
+        cout << "Case 4 Both Child as NULL " << "  root:" << root->data << endl;
+
+        return true;
+    }
+
+}
+
+int findLeftMax(Node* root)
+{
+    if(root == NULL)
+    {
+        return INT16_MIN;
+    }
+    int val = root->data;
+    int v1 = findLeftMax(root->left);
+    int v2 = findLeftMax(root->right);
+
+    return max(val,max(v1,v2));
+}
+
+int findRightMin(Node* root)
+{
+    if(root == NULL)
+    {
+        return INT16_MAX;
+    }
+    int val = root->data;
+    int v1 = findRightMin(root->left);
+    int v2 = findRightMin(root->right);
+
+    return min(val,min(v1,v2));
+}
+
+
+bool validateBST(Node* root)
+{
+    if(root == NULL)
+    {
+        return true;
+    }
+
+    if(root->left!=NULL && root->data <= findLeftMax(root->left))
+    {
+        return false;
+    }
+    if(root->right!=NULL && root->data >= findRightMin(root->right))
+    {
+        return false;
+    }
+    if(!validateBST(root->left) || !validateBST(root->right))
+    {
+        return false;
+    }
+    return true;
+}
+void print_vector(vector<int>v)
+{
+    cout << __FUNCTION__ << "Value of Vector:\t" ;
+    for(auto h:v)
+    {
+        cout << h << "\t";
+    }
+    cout << endl;
+}
+
+void print_vectorOfNodes(vector<Node*>v)
+{
+    cout << __FUNCTION__ << "Value of Nodes in Vector:\t" ;
+    for(auto h:v)
+    {
+        cout << h->data << "\t";
+    }
+    cout << endl;
+}
+
+Node* CreateTree(Node* root,vector<int>v)
+{
+    vector<int>::iterator l=v.begin();
+    vector<int>::iterator r=v.begin()+v.size();
+    if(l<r)
+    {
+        int mid = v.size()/2;
+        root=new Node(v.at(mid));
+        //cout << "root data=" << root->data << endl;
+        vector<int> newLeftVector(v.begin(),v.begin()+mid);
+        print_vector(newLeftVector);
+        vector<int> newRightVector(v.begin()+mid+1,v.end());
+        print_vector(newRightVector);
+        root->left=CreateTree(root->left,newLeftVector);
+        root->right=CreateTree(root->right,newRightVector);
+        return root;
+    }
+    else
+    {
+        return NULL;
+    }
+
+    /*
+    // Second Implementation:
+
+    if(v.size()==0) return NULL;
+    if(v.size()==1) return new Node(v[0]);
+    int mid = v.size()/2;
+    Node* root=new Node(v[mid]);
+    vector<int> newLeftVector(v.begin(),v.begin()+mid);
+    vector<int> newRightVector(v.begin()+mid+1,v.end());
+    root->left=sortedArrayToBST(newLeftVector);
+    root->right=sortedArrayToBST(newRightVector);
+    return root;
+    */
+}
+
+void findLargestValueAtEachLevel(Node* root)
+{
+    vector<int> Large;
+
+    queue<Node*> q;
+    q.push(root);
+    Large.push_back(root->data);
+    q.push(NULL);
+    int max_val=-1;
+    while(!q.empty())
+    {
+        Node* temp=q.front();
+        if(temp!=NULL)
+        {
+            cout << "Temp Data=" << temp->data << endl;
+        }
+        else
+        {
+            cout << "Temp Is NULL" << endl;
+        }
+        q.pop();
+
+
+        if(temp==NULL)
+        {
+            if(!q.empty())
+            {
+               q.push(NULL);
+                Large.push_back(max_val);
+                //cout << "Maxval=" << max_val <<"size of Large= " << Large.size() << "Size of Q=" << q.size()<< endl;
+                max_val = -1;
+            }
+
+        }
+
+        else if(temp!=NULL)
+        {
+
+            if(temp->left)
+            {
+                if(temp->left->data > max_val)
+                {
+                    max_val = temp->left->data;
+                }
+                q.push(temp->left);
+            }
+
+            if(temp->right)
+            {
+                if(temp->right->data > max_val)
+                {
+                    max_val = temp->right->data;
+                }
+                q.push(temp->right);
+            }
+        }
+
+    }
+
+    cout << "Size of Large =" << Large.size() << endl;
+    print_vector(Large);
+}
+
 int main()
 {
     //Iterative Approach
@@ -857,13 +1169,15 @@ int main()
     //root = insertIntoBST(root,1);
 
     root = new Node(7);
-    root->left = new Node(5);
-    root->left->left = new Node(12);
-    root->left->right = new Node(15);
-    root->left->left->left = new Node(9);
-    root->left->right->right = new Node(29);
-    root->left->left->left->right = new Node(25);
-    root->left->right->right->left = new Node(16);
+    root->left = new Node(4);
+    root->right = new Node(9);
+    root->left->left = new Node(3);
+    root->left->right = new Node(5);
+    //root->left->left->left = new Node(9);
+    //root->left->right->right = new Node(29);
+    //root->left->left->left->right = new Node(25);
+    root->right->right = new Node(12);
+    root->right->left = new Node(8);
 
     Node* root1 = NULL;
     root1 = insertIntoBST(root1,3);
@@ -881,6 +1195,23 @@ int main()
     cout << "\nInOrder Traversal of Tree 1" << endl;
     inOrder(root);
     cout << endl << endl;
+
+    Node* root3;
+    //int arr[10] = {0,1,2,3,4,5,6,7,8,9};
+    vector<int> v = {0,1,2,3,4,5,6,7,8,9};
+    root3=CreateTree(root3,v);
+    cout << "\nInOrder Traversal of Tree 3" << endl;
+    inOrder(root3);
+    cout << endl << endl;
+
+    cout << "\nPostOrder Traversal of Tree 3" << endl;
+    postOrder(root3);
+    cout << endl << endl;
+
+    int s=depthUsingLevelOrderTraversal(root3);
+
+    cout << "Largest Node at Each Level Data::" ;
+    findLargestValueAtEachLevel(root3);
 
 /*
     cout << "\nInOrder Traversal of Tree 2" << endl;
@@ -951,10 +1282,22 @@ int main()
     int diameter=0;
     diameterOfABinaryTree(root,diameter);
     cout << "\n Diameter of a Tree :" << diameter  << endl;
-*/
+
     Node*head = ConvertBSTAsCDLL(root);
     cout << "Convert BST to CDLL:" << endl;
     printCDLL(head);
+*/
+
+
+    cout << "checkIfTreeIsHeightBalanced::" << checkIfTreeIsHeightBalnaced(root) << endl;
+
+    cout << "checkForChildSumProperty::" << checkForChildSumProperty(root) << endl;
+
+    cout << "checkIfTreeIsBST::" << checkIfTreeIsBST(root) << endl;
+
+    cout << "validateBST::" << validateBST(root) << endl;
+
+
 
     /*
     // Iterative Approach
