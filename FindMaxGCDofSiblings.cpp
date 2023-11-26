@@ -51,6 +51,61 @@ int findGCDofSiblings(vector<vector<int>> v,int &ans)
     return ans;
 }
 
+class Node
+{
+    public:
+    int data;
+    Node* left;
+    Node* right;
+
+    Node(){}
+    Node(int val)
+    {
+        data =  val;
+        left = right = NULL;
+    }
+};
+
+int findMaxGCD(Node* root,int &ans)
+{
+    if(!root)
+    {
+        cout << "root is NULL"<< endl;
+       return 0;
+    }
+
+    cout << "root->data=" << root->data << endl;
+
+    int left_gcd = findMaxGCD(root->left,ans);
+    int right_gcd = findMaxGCD(root->right,ans);
+
+    cout << "left GCD=" << left_gcd << endl;
+    cout << "right GCD=" << right_gcd << endl;
+    if(left_gcd!=0 && right_gcd!=0)
+    {
+
+        ans=max(ans,findGCD(left_gcd,right_gcd));
+        cout << "ans=" << ans << endl;
+        return ans;
+    }
+    else if(left_gcd==0 && right_gcd==0)
+    {
+        return root->data;
+    }
+    else if(left_gcd!=0 && right_gcd==0)
+    {
+        return findGCD(root->data, left_gcd);
+    }
+    else if(left_gcd==0 && right_gcd!=0)
+    {
+        return findGCD(root->data, right_gcd);
+    }
+    //return (root->left) ? findGCD(root->data, left_gcd)
+                        //: root->data;
+    //return (root->right) ? findGCD(root->data, right_gcd)
+                       // : root->data;
+}
+
 int main()
 {
     //int arr[1][2]={{1}};
@@ -62,6 +117,15 @@ int main()
     v.push_back({4,8});
     v.push_back({8,12});
     cout << "Max GCD of Siblings:" << findGCDofSiblings(v,ans) << endl;
+
+    ans=0;
+    Node* root;
+    root= new Node(5);
+    root->left = new Node(3);
+    root->right = new Node(9);
+    root->left->left = new Node(6);
+
+    cout << "Another Way to find Max GCD of Siblings:" << findMaxGCD(root,ans) << endl;
 
     /*
     int n=1;
