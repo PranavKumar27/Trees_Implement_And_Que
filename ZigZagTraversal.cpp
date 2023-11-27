@@ -98,3 +98,75 @@ int main()
 }
 
 
+// Optimized Code /**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+ #include <algorithm>
+
+class Solution {
+public:
+    vector<vector<int>> zigzagLevelOrder(TreeNode* root) {
+
+        if(!root)
+        {
+            return {};
+        }
+        vector<vector<int>> ans;
+        bool toggle=false;
+        queue<TreeNode*> q;
+        q.push(root);
+        int index;
+
+        while(!q.empty())
+        {
+            int sz=q.size();
+            vector<int>v(sz);
+            for(int i=0;i<sz;++i)
+            {
+                TreeNode* temp = q.front();
+                q.pop();
+                // if(temp==NULL)
+                //     continue;
+                // v.push_back(temp->val);
+                index = (!toggle)?i:sz-1-i;
+                v[index] = temp->val;
+                //cout << "Size of v" << v.size() << endl;
+                if(temp->left)
+                {
+                    q.push(temp->left);
+                }
+                if(temp->right)
+                {
+                    q.push(temp->right);
+                }
+            }
+
+            toggle=!toggle;
+            // if(toggle==false)
+            // {
+            //     reverse(v.begin(),v.end());
+            // }
+            ans.push_back(v);
+        }
+
+        // for (auto i:ans)
+        // {
+        //     for(auto j:i)
+        //     {
+        //         cout << "\t" << j;
+        //     }
+        //     cout << endl;
+        // }
+        return ans;
+        
+    }
+};
+
