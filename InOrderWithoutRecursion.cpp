@@ -21,27 +21,32 @@ void printInOrder(Node* root)
 {
     cout << __FUNCTION__ << endl;
     stack<Node*> s;
-    Node* temp = nullptr;
-    Node* prevTemp = nullptr;
-    s.push(root);
+    Node* temp;
+    s.push(NULL);
     temp=root;
-    while(temp!=NULL || !s.empty())
+
+    while(!s.empty())
     {
         while(temp!=NULL)
         {
             s.push(temp);
             temp = temp->left;
-
         }
         temp = s.top();
         s.pop();
-        if(temp!=NULL)
+
+        if(temp==NULL)
+        {
+            // Reached Bottom of the stack
+            cout << "\n Null Found Reached Bottom of the Stack" << endl;
+            break;
+        }
+
+        if(temp!=NULL);
         cout << "\t"  << temp->data;
 
-
-        temp= temp->right;
-
-
+        if(temp!=NULL)
+            temp = temp->right;
     }
 }
 int main()
