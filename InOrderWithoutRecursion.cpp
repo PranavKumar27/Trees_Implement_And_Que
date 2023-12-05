@@ -1,5 +1,6 @@
 #include <iostream>
 #include <stack>
+#include <vector>
 
 using namespace std;
 
@@ -40,7 +41,40 @@ void printInOrder(Node* root)
         if(temp!=NULL)
             temp = temp->right;
     }
+    cout << endl;
 }
+
+ vector<int> inorderTraversal(Node* root)
+ {
+     cout << __FUNCTION__ << endl;
+     vector<int> res;
+
+        Node* temp = root;
+        stack<Node*> s;
+
+        while(true)
+        {
+            if(temp!=NULL)
+            {
+                s.push(temp);
+                temp=temp->left;
+            }
+            else
+            {
+                if(s.empty())
+                {
+                    break;
+                }
+
+                temp=s.top();
+                res.push_back(temp->data);
+                s.pop();
+
+                temp = temp->right;
+            }
+        }
+        return res;
+    }
 int main()
 {
     Node* root = new Node(10);
@@ -52,6 +86,15 @@ int main()
     root->right->right = new Node(25);
 
     printInOrder(root);
+
+    vector<int> v;
+    v = inorderTraversal(root);
+
+    for(auto i:v)
+    {
+        cout << "\t" << i ;
+    }
+    cout << endl;
 
     return 0;
 }
