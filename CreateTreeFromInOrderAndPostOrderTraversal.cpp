@@ -99,3 +99,43 @@ int main()
 
     return 0;
 }
+
+
+// Optimized Approach 
+
+ TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder) {
+        map<int,int> Mp;
+
+        for(int i=0;i<inorder.size();i++)
+        {
+            Mp[inorder[i]] = i;
+        }
+        int iStart = 0;
+        int iEnd = inorder.size();
+        int pStart = 0;
+        int pEnd = preorder.size();
+
+
+        int preIdx=0;
+        return constructTree(preorder,pEnd,inorder,iStart,iEnd,preIdx,Mp);
+        //return root;
+    }
+
+    TreeNode* constructTree(vector<int>&preorder, int pEnd, vector<int>&inorder,int iStart, int iEnd, int& preidx, map<int,int>Mp)
+    {
+        if(iStart>iEnd || preidx>=pEnd)
+        {
+            return NULL;
+        }
+
+        int val = preorder[preidx++];
+        int index = Mp[val];
+
+        TreeNode* root = new TreeNode(val);
+
+        root->left = constructTree(preorder,pEnd,inorder,iStart,index-1,preidx,Mp);
+
+        root->right = constructTree(preorder,pEnd,inorder,index+1,iEnd,preidx,Mp);
+
+        return root;
+    }
