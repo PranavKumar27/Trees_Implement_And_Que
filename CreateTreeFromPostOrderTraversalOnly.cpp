@@ -66,11 +66,39 @@ Node* buildTreeFromPreOrder(vector<int> pre,int preStart,int preEnd)
      return temp;
 }
 
+Node* BuildTree(vector<int>& pre,int mini,int maxi,int& preidx)
+{
+    int sz = pre.size();
+    if(preidx>=sz || sz == 0)
+    {
+        return NULL;
+    }
+    int key = pre[preidx];
+    Node* temp=NULL;
+    if(key>mini && key<maxi)
+    {
+        temp = new Node(key);
+        preidx++;
+        if(preidx<sz)
+        {
+            temp->left = BuildTree(pre,mini,key,preidx);
+            temp->right = BuildTree(pre,key,maxi,preidx);
+        }
+    }
+    return temp;
+}
+
 int main()
 {
     vector<int> PreOrder{10,5,1,7,40,50};
 
-    Node* root = buildTreeFromPreOrder(PreOrder,0,PreOrder.size());
+    int preidx = 0;
+    int mini = INT_MIN;
+    int maxi = INT_MAX;
+
+    Node* root = BuildTree(PreOrder,mini,maxi,preidx);
+
+    //Node* root = buildTreeFromPreOrder(PreOrder,0,PreOrder.size());
 
     inOrder(root);
     cout << endl;
