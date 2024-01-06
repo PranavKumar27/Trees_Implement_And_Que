@@ -1,4 +1,4 @@
-// Using Level Order Traversal
+// Technique 1: Using Level Order Traversal
 
 bool isIdentical(Node *r1, Node *r2)
     {
@@ -47,7 +47,7 @@ bool isIdentical(Node *r1, Node *r2)
             return false;
     }
 
-// Using Recursion
+// Technique 2: Using Recursion
 bool isIdentical(Node *t1, Node *t2)
     {
         if(t1==NULL && t2 == NULL)
@@ -64,7 +64,7 @@ bool isIdentical(Node *t1, Node *t2)
         return left&&right;
     }
 
-// Using All Types of Traversal InOrder,PreOrder and PostOrder
+// Technique 3: Using All Types of Traversal InOrder,PreOrder and PostOrder
 string findInOrder(Node* root,string& str)
 {
     if(root == NULL)
@@ -136,5 +136,34 @@ bool compareTwoBST(Node* root1, Node* root2)
         return false;
     }
 }
+
+
+// Technique 4: Using PreOrder
+
+void preOrder(Node* root,vector<int>& v)
+{
+    if(root == NULL)
+        return;
+
+    v.push_back(root->data);
+    if(root->left)
+        preOrder(root->left,v);
+    else
+        v.push_back(0);
+
+    if(root->right)
+        preOrder(root->right,v);
+    else
+        v.push_back(0);
+}
+
+bool isIdentical(Node* t1,Node* t2)
+{
+    vector<int> u,v;
+    preOrder(t1,u);
+    preOrder(t2,v);
+    return u==v;  
+}
+
 
 
