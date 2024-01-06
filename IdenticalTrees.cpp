@@ -138,7 +138,7 @@ bool compareTwoBST(Node* root1, Node* root2)
 }
 
 
-// Technique 4: Using PreOrder
+// Technique 4: Using PreOrder Or PreOrder But cannot use InOrder
 
 void preOrder(Node* root,vector<int>& v)
 {
