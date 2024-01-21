@@ -29,6 +29,25 @@ int height(Node* root,bool& isBalanced)
         isBalanced = false;
     return max(lh,rh)+1;
 }
+
+int IsBalanced(Node* root)
+{
+    if(root == NULL)
+        return 0;
+
+    int lh = IsBalanced(root->left);
+    if(lh==-1)
+        return -1;
+    int rh = IsBalanced(root->right);
+    if(rh==-1)
+        return -1;
+    cout << "root=" << root->data << "\t lh=" << lh << "\t rh=" << rh << endl;
+
+    if(abs(lh-rh)>kOne)
+        return -1;
+    return max(lh,rh)+1;
+}
+
 /*
 bool isTreeHeightBalanced(Node* root)
 {
@@ -57,11 +76,15 @@ int main()
 
     bool isBalanced = true;
 
-    //bool res = isTreeHeightBalanced(root)
+    bool res = isTreeHeightBalanced(root)
 
     height(root,isBalanced);
 
-    cout << "Is Tree Height Balanced =" << isBalanced << endl;
+    cout << "Is Tree Height Balanced Technique 1 = " << res << endl;
+
+    int ans = IsBalanced(root);
+
+    cout << "Is Tree Height Balanced Technique 2 = " << ans << endl;
 
 
     return 0;
